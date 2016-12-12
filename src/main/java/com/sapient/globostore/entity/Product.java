@@ -1,10 +1,15 @@
 package com.sapient.globostore.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by dpadal on 12/12/2016.
  */
+@Setter @Getter
 public class Product {
 
     private long id;
@@ -12,46 +17,8 @@ public class Product {
     private String category;
     private BigDecimal unitPrice;
     private String desc;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+    private boolean lock = false;
+    private Date lockedAt;
 
     @Override
     public boolean equals(Object o) {

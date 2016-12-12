@@ -12,5 +12,5 @@ public interface CartRepository {
 
     boolean add(Product product);
 
-    boolean delete(long productId);
+    boolean delete(Product product);
 }

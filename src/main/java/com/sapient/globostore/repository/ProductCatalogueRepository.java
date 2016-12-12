@@ -4,14 +4,16 @@ import com.sapient.globostore.entity.Discount;
 import com.sapient.globostore.entity.Product;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 /**
  * Created by dpadal on 12/12/2016.
  */
-public interface ProductCatelogue {
+public interface ProductCatalogueRepository {
 
-    Map<String, Product> fetchAll();
+    Map<Long, Product> fetchAll();
 
-    Set<Discount> getDiscount(long productId);
+    Optional<Discount> getDiscount(long productId);
+
+    boolean isProductExist(Long productId);
 }

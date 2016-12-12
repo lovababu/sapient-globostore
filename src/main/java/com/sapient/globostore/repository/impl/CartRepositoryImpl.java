@@ -1,79 +1,49 @@
 package com.sapient.globostore.repository.impl;
 
-import com.sapient.globostore.entity.Discount;
-import com.sapient.globostore.entity.DiscountType;
 import com.sapient.globostore.entity.Product;
+import com.sapient.globostore.repository.CartRepository;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Repository class.
+ * CartRepository class responsible for lock and unlock the product when the product get added/deleted to/from cart.
  *
- * Assuming the Products/Discount get loaded from Backend Data store.
+ * Assuming the Products get updated in Backend Data store.
  *
  * For now it is kind of legless design, where we don't have any data store.
  *
  * Created by dpadal on 12/12/2016.
  */
-public class CartRepositoryImpl {
-
-    AtomicLong productId = new AtomicLong(1);
-    AtomicInteger discountId = new AtomicInteger(1);
-    private final Map<Long, Product> PRODUCT_DATA;
-
-    private final Set<Discount> DISCOUNTS;
-
-    public CartRepositoryImpl() {
-        PRODUCT_DATA = new HashMap<Long, Product>(3);
-        DISCOUNTS = new HashSet<Discount>(3);
-        initialize();
-    }
-
+public class CartRepositoryImpl implements CartRepository{
 
     /**
-     * Initializing Product and Discount data.
+     * Mark the product as locked
+     *  case 1: if not already locked and set <code>{@link Product#setLockedAt(Date)}</code>
+     *  case 2: if locked, verify <code>{@link Product#getLockedAt()}</code> if older than 30 min, unlock  and
+     *  set reset time.
      *
-     * assuming this data loading from Data store, and cached if required.
+     * And then Update in DB.
      *
+     * <code>{@link Product#setLock(boolean)}</code>
+     *
+     * @param product
+     * @return true if product Available and updateCount > 0, else false.
      */
-    private void initialize() {
-        Product productA = product("A", new BigDecimal(5));
-        PRODUCT_DATA.put(productId.get(), productA);
-        Product productB = product("B", new BigDecimal(15));
-        PRODUCT_DATA.put(productB.getId(), productB);
-        Product productC = product("C", new BigDecimal(10));
-        PRODUCT_DATA.put(productC.getId(), productC);
-
-        DISCOUNTS.add(discount("A", DiscountType.QUANTITY, 3, new BigDecimal(13)));
-        DISCOUNTS.add(discount("B", DiscountType.QUANTITY, 2, new BigDecimal(25)));
-        DISCOUNTS.add(discount("C", DiscountType.QUANTITY, 5, new BigDecimal(40)));
+    public boolean add(Product product) {
+        //Fetch the Product from DB.
+        product.setLock(true);
+        return true;
     }
 
-    private Product product(String productName, BigDecimal unitPrice) {
-        Product product = new Product();
-        product.setId(productId.getAndIncrement());
-        product.setName(productName);
-        product.setCategory("Electronic");
-        product.setUnitPrice(unitPrice);
-        return product;
-    }
-
-    private Discount discount(String productName, DiscountType discountType, int forItems, BigDecimal discValue) {
-        Discount discount = new Discount();
-        discount.setDiscountType(discountType);
-        discount.setId(discountId.getAndIncrement());
-        discount.setForItems(forItems);
-        discount.setDiscountValue(discValue);
-        discount.setStartDate(new Date());
-        discount.setEndDate(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(8)));
-        return discount;
+    /**
+     * Unlock the Product if it is locked and update <code>{@link Product#setLockedAt(Date)}</code> to null.
+     * And update Product in DB.
+     * @param product
+     * @return true if updateCount > 0
+     */
+    public boolean delete(Product product) {
+        //Fetch the Product from DB.
+        product.setLock(false);
+        return true;
     }
 }
