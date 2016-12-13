@@ -36,10 +36,22 @@ public class CartServiceImpl implements CartService {
         this.productCatalogueRepository = productCatalogueRepository;
     }
 
+    /**
+     * Mark the product as locked in DB, implies adding to cart.
+     *
+     * @param product
+     * @return
+     */
     public boolean add(Product product) {
         return cartRepository.add(product);
     }
 
+    /**
+     * Mark the product as available, unlocking.
+     *
+     * @param product
+     * @return
+     */
     public boolean delete(Product product) {
         return cartRepository.delete(product);
     }
@@ -57,6 +69,14 @@ public class CartServiceImpl implements CartService {
         return billMap;
     }
 
+    /**
+     * Generate the bill by applying discounts for each product.
+     *
+     * @param productName
+     * @param quantity
+     * @return
+     * @throws ScriptException
+     */
     private Bill generateBill(String productName, Integer quantity) throws ScriptException {
         Bill bill = null;
         Optional<Product> optional = productCatalogueRepository.getProduct(productName);
@@ -74,6 +94,14 @@ public class CartServiceImpl implements CartService {
         return bill;
     }
 
+    /**
+     * Calculates the total Amount payable for the particular product, after appyling discount.
+     *
+     * @param product
+     * @param quantity no of products in cart.
+     * @return
+     * @throws ScriptException
+     */
     private BigDecimal calculateAmountPayable(Product product, int quantity) throws ScriptException {
         BigDecimal totalAmountPayable;
         Optional<Discount> optional = product.getDiscounts().stream().findFirst();
@@ -95,10 +123,27 @@ public class CartServiceImpl implements CartService {
         return totalAmountPayable;
     }
 
+    /**
+     * Calculates the Total amount for the product without applying discount.
+     *
+     * @param product
+     * @param quantity no of products in cart.
+     * @return
+     * @throws ScriptException
+     */
     private BigDecimal calculateTotalAmount(Product product, int quantity) throws ScriptException {
         return eval(Expressions.EXPRESSION_TOTAL, product, quantity);
     }
 
+    /**
+     * Method uses <code>{@link ScriptEngine}</code> to evaluate the js based mathematical script.
+     *
+     * @param expression
+     * @param product
+     * @param quantity
+     * @return
+     * @throws ScriptException
+     */
     private BigDecimal eval(String expression, Product product, Integer quantity) throws ScriptException {
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
         ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("javascript");

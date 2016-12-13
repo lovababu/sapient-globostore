@@ -1,5 +1,6 @@
 package com.sapient.globostore;
 
+import com.sapient.globostore.entity.Product;
 import com.sapient.globostore.repository.CartRepository;
 import com.sapient.globostore.repository.ProductCatalogueRepository;
 import com.sapient.globostore.repository.impl.CartRepositoryImpl;
@@ -10,6 +11,7 @@ import com.sapient.globostore.service.impl.CartServiceImpl;
 import com.sapient.globostore.service.impl.ProductCatalogueServiceImpl;
 
 import javax.script.ScriptException;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -31,8 +33,11 @@ public class InteractiveTest {
         globostoreCheckout = new GlobostoreCheckout(cartService, productCatalogueService);
 
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter Product Name {\"A\", \"B\", \"C\"} :");
+        Map<Long, Product> productMap = globostoreCheckout.fetchAll();
+        System.out.print("Enter Product Name {");
+        productMap.entrySet().stream().forEach(longProductEntry -> System.out.print("\"" + longProductEntry.getValue().getName() + "\" "));
+        System.out.print("}");
+        System.out.println();
         while (scanner.hasNextLine()) {
             String product = scanner.nextLine();
             if (product.isEmpty()) {

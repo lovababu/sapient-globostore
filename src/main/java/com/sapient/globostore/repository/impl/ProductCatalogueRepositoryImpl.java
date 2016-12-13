@@ -62,33 +62,8 @@ public class ProductCatalogueRepositoryImpl implements ProductCatalogueRepositor
                 .findFirst();
     }
 
-    @Override
-    public Set<Discount> fetchAllDiscounts() {
-        return DISCOUNTS;
-    }
-
-
     /**
-     * @param productId
-     * @return <code>{@link Set}</code>
-     */
-    public Optional<Discount> getDiscount(final long productId) {
-        if (CollectionUtils.isNotEmpty(DISCOUNTS)) {
-            return Optional.empty();
-        }
-        return DISCOUNTS.stream()
-                .filter(discount -> discount.getProductId().getId() == productId)
-                .findFirst();
-    }
-
-    @Override
-    public boolean isProductExist(Long productId) {
-        return MapUtils.isNotEmpty(PRODUCT_DATA) && PRODUCT_DATA.containsKey(productId);
-    }
-
-
-    /**
-     * Initializing Product and Discount data.
+     * Initializing Product and Discount data, dummy data.
      * <p>
      * assuming this data loading from Data store, and cached if required.
      */
