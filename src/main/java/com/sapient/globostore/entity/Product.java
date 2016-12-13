@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by dpadal on 12/12/2016.
@@ -19,6 +20,8 @@ public class Product {
     private String desc;
     private boolean lock = false;
     private Date lockedAt;
+
+    private Set<Discount> discounts;
 
     @Override
     public boolean equals(Object o) {

@@ -1,7 +1,7 @@
 package com.sapient.globostore.repository.impl;
 
 import com.sapient.globostore.entity.Discount;
-import com.sapient.globostore.entity.DiscountType;
+import com.sapient.globostore.enums.DiscountType;
 import com.sapient.globostore.entity.Product;
 import com.sapient.globostore.repository.ProductCatalogueRepository;
 import org.apache.commons.collections.CollectionUtils;
@@ -40,8 +40,8 @@ public class ProductCatalogueRepositoryImpl implements ProductCatalogueRepositor
      * Initialize the data.
      */
     public ProductCatalogueRepositoryImpl() {
-        PRODUCT_DATA = new HashMap<Long, Product>(3);
-        DISCOUNTS = new HashSet<Discount>(3);
+        PRODUCT_DATA = new HashMap<>(3);
+        DISCOUNTS = new HashSet<>(3);
         initialize();
     }
 
@@ -53,6 +53,18 @@ public class ProductCatalogueRepositoryImpl implements ProductCatalogueRepositor
      */
     public Map<Long, Product> fetchAll() {
         return PRODUCT_DATA;
+    }
+
+    @Override
+    public Optional<Product> getProduct(String name) {
+        return PRODUCT_DATA.values().stream()
+                .filter(product -> product.getName().equalsIgnoreCase(name))
+                .findFirst();
+    }
+
+    @Override
+    public Set<Discount> fetchAllDiscounts() {
+        return DISCOUNTS;
     }
 
 
@@ -82,15 +94,16 @@ public class ProductCatalogueRepositoryImpl implements ProductCatalogueRepositor
      */
     private void initialize() {
         Product productA = product("A", new BigDecimal(5));
-        PRODUCT_DATA.put(productId.get(), productA);
-        Product productB = product("B", new BigDecimal(15));
-        PRODUCT_DATA.put(productB.getId(), productB);
-        Product productC = product("C", new BigDecimal(10));
-        PRODUCT_DATA.put(productC.getId(), productC);
+        loadDiscount(productA, DiscountType.QUANTITIVE, 3, new BigDecimal(13));
+        PRODUCT_DATA.put(productA.getId(), productA);
 
-        DISCOUNTS.add(discount("A", DiscountType.QUANTITY, 3, new BigDecimal(13)));
-        DISCOUNTS.add(discount("B", DiscountType.QUANTITY, 2, new BigDecimal(25)));
-        DISCOUNTS.add(discount("C", DiscountType.QUANTITY, 5, new BigDecimal(40)));
+        Product productB = product("B", new BigDecimal(15));
+        loadDiscount(productB, DiscountType.QUANTITIVE, 2, new BigDecimal(25));
+        PRODUCT_DATA.put(productB.getId(), productB);
+
+        Product productC = product("C", new BigDecimal(10));
+        loadDiscount(productC, DiscountType.QUANTITIVE, 5, new BigDecimal(40));
+        PRODUCT_DATA.put(productC.getId(), productC);
     }
 
     private Product product(String productName, BigDecimal unitPrice) {
@@ -102,7 +115,7 @@ public class ProductCatalogueRepositoryImpl implements ProductCatalogueRepositor
         return product;
     }
 
-    private Discount discount(String productName, DiscountType discountType, int forItems, BigDecimal discValue) {
+    private Discount loadDiscount(Product product, DiscountType discountType, int forItems, BigDecimal discValue) {
         Discount discount = new Discount();
         discount.setDiscountType(discountType);
         discount.setId(discountId.getAndIncrement());
@@ -110,6 +123,13 @@ public class ProductCatalogueRepositoryImpl implements ProductCatalogueRepositor
         discount.setDiscountValue(discValue);
         discount.setStartDate(new Date());
         discount.setEndDate(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(8)));
+        discount.setProductId(product);
+        product.setDiscounts(new HashSet<Discount>() {
+            {
+                add(discount);
+            }
+        });
+        DISCOUNTS.add(discount);
         return discount;
     }
 }

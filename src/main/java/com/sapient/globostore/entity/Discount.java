@@ -1,5 +1,6 @@
 package com.sapient.globostore.entity;
 
+import com.sapient.globostore.enums.DiscountType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,4 +20,45 @@ public class Discount {
     private BigDecimal discountValue;
     private Date startDate;
     private Date endDate;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Discount discount = (Discount) o;
+
+        if (id != discount.id) {
+            return false;
+        }
+        if (forItems != discount.forItems) {
+            return false;
+        }
+
+        if (productId == null || discount.getProductId() == null) {
+            return false;
+        } else if (productId.getId() != discount.getProductId().getId()){
+            return false;
+        }
+
+        if (discountType != discount.discountType) {
+            return false;
+        }
+        return discountValue.equals(discount.discountValue);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + Long.valueOf(productId.getId()).hashCode();
+        result = 31 * result + discountType.hashCode();
+        result = 31 * result + forItems;
+        result = 31 * result + discountValue.hashCode();
+        return result;
+    }
 }

@@ -6,7 +6,8 @@ import com.sapient.globostore.repository.CartRepository;
 import java.util.Date;
 
 /**
- * CartRepository class responsible for lock and unlock the product when the product get added/deleted to/from cart.
+ * CartRepository class responsible for lock and unlock the product when the product
+ * get added/deleted to/from cart, to achieve concurrency.
  *
  * Assuming the Products get updated in Backend Data store.
  *

@@ -8,14 +8,18 @@ import lombok.Setter;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by dpadal on 12/12/2016.
  */
 public class ProductCatalogueServiceImpl implements ProductCatalogueService {
 
-    @Setter
     private ProductCatalogueRepository productCatalogueRepository;
+
+    public ProductCatalogueServiceImpl(ProductCatalogueRepository productCatalogueRepository) {
+        this.productCatalogueRepository = productCatalogueRepository;
+    }
 
     @Override
     public Map<Long, Product> fetchAll() {
@@ -30,5 +34,15 @@ public class ProductCatalogueServiceImpl implements ProductCatalogueService {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Set<Discount> fetchAllDiscounts() {
+        return productCatalogueRepository.fetchAllDiscounts();
+    }
+
+    @Override
+    public Optional<Product> getProduct(String name) {
+        return productCatalogueRepository.getProduct(name);
     }
 }
