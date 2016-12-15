@@ -1,11 +1,10 @@
-package com.sapient.globostore;
+package com.sapient.globostore.client;
 
 import com.sapient.globostore.entity.Bill;
 import com.sapient.globostore.entity.Product;
 import com.sapient.globostore.service.CartService;
 import com.sapient.globostore.service.ProductCatalogueService;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.script.ScriptException;
 import java.math.BigDecimal;

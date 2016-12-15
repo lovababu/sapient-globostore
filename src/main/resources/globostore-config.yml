@@ -1,0 +1,18 @@
+server:
+  type: appserver
+  applicationContextPath: /globostore
+  shutdownGracePeriod: 5s
+  applicationConnectors:
+    - type: http
+      port: 8081
+      idleTimeout: 200s
+      # If true, allows usage of the Server header in responses.
+      useServerHeader: false
+      # If true, allows usage of the Date header in responses.
+      useDateHeader: true
+      # If true, the HTTP server will prefer X-Forwarded headers over
+      # their non-forwarded equivalents.
+      useForwardedHeaders: true
+  adminConnectors:
+    - type: http
+      port: 8082

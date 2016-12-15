@@ -4,12 +4,9 @@ import com.sapient.globostore.constant.Expressions;
 import com.sapient.globostore.entity.Bill;
 import com.sapient.globostore.entity.Discount;
 import com.sapient.globostore.entity.Product;
-import com.sapient.globostore.enums.DiscountType;
 import com.sapient.globostore.repository.CartRepository;
 import com.sapient.globostore.repository.ProductCatalogueRepository;
 import com.sapient.globostore.service.CartService;
-import lombok.Setter;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 
 import javax.script.Bindings;
@@ -20,7 +17,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Created by dpadal on 12/12/2016.

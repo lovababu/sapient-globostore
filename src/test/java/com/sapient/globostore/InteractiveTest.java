@@ -1,5 +1,6 @@
 package com.sapient.globostore;
 
+import com.sapient.globostore.client.GlobostoreCheckout;
 import com.sapient.globostore.entity.Product;
 import com.sapient.globostore.repository.CartRepository;
 import com.sapient.globostore.repository.ProductCatalogueRepository;
